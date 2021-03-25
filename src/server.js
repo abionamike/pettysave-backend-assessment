@@ -1,11 +1,18 @@
-const { config } = require('dotenv');
-const http = require('http');
-const app = require('./app');
+/* eslint-disable no-console */
+require('dotenv').config();
+const express = require('express');
+const userRoutes = require('../routes/userRoutes');
+const taskRoutes = require('../routes/taskRoutes');
+const connectDB = require('../db/dbConfig');
 
-config();
+const app = express();
+connectDB();
+
+app.use(express.json());
+
+app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes);
 
 const PORT = process.env.NODE_ENV === 'test' ? 6378 : process.env.PORT || 5000;
 
-const server = http.createServer(app);
-
-server.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`));
